@@ -3,70 +3,964 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>All Hands — Every player counts.</title>
+  <title>All Hands Sports — Every player counts.</title>
+  <meta name="description" content="All Hands is a team management app for sports teams. Coordinate availability, manage lineups, and never miss a match update." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ── Reset & Base ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #080A08;
       color: #F0FBE8;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Utilities ── */
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .text-accent { color: #C4FF00; }
+    .text-muted { color: #6A7A62; }
+
+    /* ── Scroll animations ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Nav ── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 0;
+      background: rgba(8, 10, 8, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(196, 255, 0, 0.06);
+    }
+    .nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-wordmark {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #F0FBE8;
+    }
+    .nav-wordmark span { color: #C4FF00; }
+    .nav-icon {
+      width: 36px;
+      height: 36px;
+      background: #C4FF00;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .nav-icon::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 3px solid #080A08;
+      position: relative;
+    }
+    .nav-icon::after {
+      content: '';
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background: #080A08;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: #C4FF00;
+      color: #080A08;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 100px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover {
+      background: #d4ff40;
+      transform: scale(1.03);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 160px 0 100px;
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-content { max-width: 540px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(196, 255, 0, 0.08);
+      border: 1px solid rgba(196, 255, 0, 0.15);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #C4FF00;
+      margin-bottom: 28px;
+    }
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: #C4FF00;
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .hero h1 {
+      font-size: clamp(40px, 5.5vw, 64px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .hero-tagline {
+      font-size: clamp(18px, 2.2vw, 22px);
+      color: #6A7A62;
+      margin-bottom: 40px;
+      line-height: 1.5;
+      max-width: 420px;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* ── App Store Badge ── */
+    .app-store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #F0FBE8;
+      color: #080A08;
+      padding: 14px 28px;
+      border-radius: 14px;
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .app-store-btn:hover {
+      background: #fff;
+      transform: scale(1.03);
+    }
+    .app-store-btn svg { flex-shrink: 0; }
+    .app-store-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .app-store-text-small {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    .app-store-text-large {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    /* ── Phone Mockup ── */
+    .phone-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .phone-glow {
+      position: absolute;
+      width: 300px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(196, 255, 0, 0.1) 0%, transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+    .phone {
+      width: 280px;
+      height: 560px;
+      background: #111511;
+      border-radius: 44px;
+      border: 3px solid #1E261E;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(196, 255, 0, 0.05),
+        0 40px 80px rgba(0, 0, 0, 0.6),
+        0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .phone-notch {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 28px;
+      background: #080A08;
+      border-radius: 20px;
+      z-index: 5;
+    }
+    .phone-screen {
+      position: absolute;
+      inset: 14px;
+      background: #0A0D0A;
+      border-radius: 32px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-status-bar {
+      height: 44px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 4px;
+    }
+    .phone-header {
+      padding: 8px 20px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .phone-header-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #C4FF00;
+      letter-spacing: -0.3px;
+    }
+    .phone-header-dot {
+      width: 8px;
+      height: 8px;
+      background: #C4FF00;
+      border-radius: 50%;
+    }
+    .phone-tab-bar {
+      display: flex;
+      gap: 4px;
+      padding: 0 16px 12px;
+    }
+    .phone-tab {
+      flex: 1;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(196, 255, 0, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: #6A7A62;
+    }
+    .phone-tab.active {
+      background: #C4FF00;
+      color: #080A08;
+    }
+    .phone-body {
+      flex: 1;
+      padding: 8px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+    .phone-card {
+      background: #151A15;
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid #1E261E;
+    }
+    .phone-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .phone-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #F0FBE8;
+      letter-spacing: 0.2px;
+    }
+    .phone-card-badge {
+      font-size: 9px;
+      font-weight: 700;
+      color: #080A08;
+      background: #C4FF00;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .phone-card-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+    }
+    .phone-card-row + .phone-card-row {
+      border-top: 1px solid rgba(106, 122, 98, 0.15);
+    }
+    .phone-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1E261E;
+      flex-shrink: 0;
+    }
+    .phone-avatar.lime { background: rgba(196, 255, 0, 0.15); border: 1.5px solid rgba(196, 255, 0, 0.3); }
+    .phone-row-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .phone-row-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #F0FBE8;
+    }
+    .phone-row-sub {
+      font-size: 9px;
+      color: #6A7A62;
+    }
+    .phone-row-status {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .phone-row-status.available {
+      background: rgba(196, 255, 0, 0.12);
+      color: #C4FF00;
+    }
+    .phone-row-status.unavailable {
+      background: rgba(255, 80, 80, 0.1);
+      color: #ff6b6b;
+    }
+    .phone-match-card {
+      background: #151A15;
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid #1E261E;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .phone-match-date {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
+      background: rgba(196, 255, 0, 0.08);
+      border-radius: 10px;
+      padding: 8px 10px;
+      min-width: 44px;
     }
-    .logo {
-      font-size: 48px;
+    .phone-match-day {
+      font-size: 16px;
+      font-weight: 800;
+      color: #C4FF00;
+      line-height: 1;
+    }
+    .phone-match-month {
+      font-size: 8px;
+      font-weight: 600;
+      color: #6A7A62;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .phone-match-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .phone-match-teams {
+      font-size: 11px;
+      font-weight: 700;
+      color: #F0FBE8;
+    }
+    .phone-match-meta {
+      font-size: 9px;
+      color: #6A7A62;
+    }
+    .phone-bottom-bar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 20px;
+      border-top: 1px solid #1E261E;
+    }
+    .phone-bottom-item {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      background: #1E261E;
+    }
+    .phone-bottom-item.active { background: #C4FF00; }
+
+    /* ── Section shared ── */
+    section {
+      padding: 100px 0;
+    }
+    .section-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #C4FF00;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 17px;
+      color: #6A7A62;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    /* ── Features ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 56px;
+    }
+    .feature-card {
+      background: #0E120E;
+      border: 1px solid #1A201A;
+      border-radius: 20px;
+      padding: 36px 32px;
+      transition: border-color 0.35s, transform 0.35s, box-shadow 0.35s;
+      cursor: default;
+    }
+    .feature-card:hover {
+      border-color: rgba(196, 255, 0, 0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(196, 255, 0, 0.04);
+    }
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(196, 255, 0, 0.08);
+      border: 1px solid rgba(196, 255, 0, 0.12);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 22px;
+    }
+    .feature-title {
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+    .feature-desc {
+      font-size: 15px;
+      color: #6A7A62;
+      line-height: 1.6;
+    }
+
+    /* ── How it Works ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 56px;
+    }
+    .step {
+      position: relative;
+    }
+    .step-number {
+      font-size: clamp(64px, 8vw, 88px);
       font-weight: 900;
       color: #C4FF00;
-      letter-spacing: -1px;
+      line-height: 1;
+      letter-spacing: -4px;
+      margin-bottom: 16px;
+      opacity: 0.25;
+    }
+    .step-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+    .step-desc {
+      font-size: 15px;
+      color: #6A7A62;
+      line-height: 1.6;
+    }
+    .step-connector {
+      display: none;
+    }
+
+    /* ── Coming Soon ── */
+    .coming-soon-section {
+      background: linear-gradient(180deg, #080A08 0%, #0C0F0C 50%, #080A08 100%);
+    }
+    .coming-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 56px;
+    }
+    .coming-card {
+      background: #0E120E;
+      border: 1px solid #1A201A;
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      opacity: 0.7;
+      transition: opacity 0.3s, border-color 0.3s;
+    }
+    .coming-card:hover {
+      opacity: 1;
+      border-color: rgba(196, 255, 0, 0.15);
+    }
+    .coming-icon {
+      font-size: 32px;
+      margin-bottom: 18px;
+      display: block;
+    }
+    .coming-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+    .coming-desc {
+      font-size: 13px;
+      color: #6A7A62;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .coming-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #C4FF00;
+      background: rgba(196, 255, 0, 0.08);
+      border: 1px solid rgba(196, 255, 0, 0.12);
+      padding: 5px 14px;
+      border-radius: 100px;
+    }
+
+    /* ── CTA Band ── */
+    .cta-band {
+      padding: 80px 0;
+      text-align: center;
+    }
+    .cta-band-title {
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 900;
+      letter-spacing: -2px;
       margin-bottom: 12px;
     }
-    .tagline {
-      font-size: 18px;
+    .cta-band-sub {
+      font-size: 17px;
       color: #6A7A62;
-      margin-bottom: 48px;
+      margin-bottom: 36px;
     }
-    .description {
-      max-width: 480px;
-      text-align: center;
-      font-size: 16px;
-      line-height: 1.7;
-      color: #F0FBE8;
-      margin-bottom: 48px;
+
+    /* ── Footer ── */
+    .footer {
+      padding: 40px 0;
+      border-top: 1px solid #1A201A;
     }
-    .links {
+    .footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #6A7A62;
+    }
+    .footer-links {
       display: flex;
       gap: 24px;
     }
-    .links a {
-      color: #C4FF00;
-      text-decoration: none;
+    .footer-links a {
       font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    .links a:hover { text-decoration: underline; }
-    footer {
-      margin-top: 64px;
-      font-size: 13px;
       color: #6A7A62;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #C4FF00; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero .container {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        text-align: center;
+      }
+      .hero-content { max-width: 100%; }
+      .hero-tagline { margin-left: auto; margin-right: auto; }
+      .hero-actions { justify-content: center; }
+      .hero-badge { margin-left: auto; margin-right: auto; }
+      .phone-wrapper { order: -1; }
+      .phone { width: 240px; height: 480px; border-radius: 38px; }
+      .phone-notch { width: 84px; height: 24px; top: 10px; }
+      .phone-screen { inset: 12px; border-radius: 28px; }
+
+      .features-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; gap: 32px; }
+      .coming-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      section { padding: 72px 0; }
+      .hero { padding: 120px 0 60px; min-height: auto; }
+      .coming-grid { grid-template-columns: 1fr; }
+      .feature-card { padding: 28px 24px; }
+      .nav-cta span { display: none; }
+      .nav-cta { padding: 10px 14px; }
     }
   </style>
 </head>
 <body>
-  <div class="logo">All Hands</div>
-  <div class="tagline">Every player counts.</div>
-  <div class="description">
-    All Hands is a team management app for sports teams of all kinds.
-    Coordinate availability, manage lineups, and stay connected — all in one place.
-  </div>
-  <div class="links">
-    <a href="/privacy.html">Privacy Policy</a>
-  </div>
-  <footer>&copy; 2026 All Hands. All rights reserved.</footer>
+
+  <!-- ── Nav ── -->
+  <nav class="nav">
+    <div class="container">
+      <a href="#" class="nav-brand">
+        <div class="nav-icon" aria-hidden="true"></div>
+        <div class="nav-wordmark">All <span>Hands</span></div>
+      </a>
+      <a href="https://apps.apple.com/app/all-hands-sports/id6744866002" class="nav-cta">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M12.32 8.36c-.02-1.8 1.47-2.66 1.54-2.7a3.34 3.34 0 0 0-2.63-1.42c-1.1-.12-2.19.66-2.75.66-.57 0-1.43-.65-2.36-.63a3.48 3.48 0 0 0-2.93 1.79c-1.26 2.18-.32 5.4.89 7.16.6.87 1.32 1.84 2.25 1.8.91-.04 1.25-.58 2.35-.58 1.09 0 1.4.58 2.35.56.97-.02 1.59-.87 2.18-1.74a7.6 7.6 0 0 0 .99-2.03 3.06 3.06 0 0 1-1.88-2.87ZM10.56 3a3.12 3.12 0 0 0 .72-2.24 3.17 3.17 0 0 0-2.06 1.06 2.97 2.97 0 0 0-.74 2.15c.77.06 1.55-.37 2.08-0.97Z" fill="currentColor"/>
+        </svg>
+        <span>Download</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content fade-in">
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          Available on iOS
+        </div>
+        <h1>Manage your<br/>team like a <span class="text-accent">pro</span></h1>
+        <p class="hero-tagline">
+          Every player counts. All Hands is the team management app that keeps your squad organized, informed, and ready to play.
+        </p>
+        <div class="hero-actions">
+          <a href="https://apps.apple.com/app/all-hands-sports/id6744866002" class="app-store-btn" aria-label="Download on the App Store">
+            <svg width="24" height="28" viewBox="0 0 24 28" fill="none" aria-hidden="true">
+              <path d="M19.68 14.58c-.03-2.88 2.35-4.26 2.46-4.33a5.34 5.34 0 0 0-4.21-2.27c-1.76-.19-3.5 1.06-4.4 1.06-.92 0-2.29-1.04-3.78-1.01a5.57 5.57 0 0 0-4.69 2.86c-2.02 3.5-.52 8.64 1.42 11.47.96 1.39 2.11 2.94 3.6 2.88 1.46-.06 2-.93 3.76-.93 1.74 0 2.24.93 3.76.9 1.56-.03 2.54-1.4 3.49-2.79a12.16 12.16 0 0 0 1.58-3.25c-.04-.01-3-.15-3-4.59ZM16.9 5.6a5 5 0 0 0 1.15-3.6 5.07 5.07 0 0 0-3.3 1.7 4.75 4.75 0 0 0-1.18 3.44c1.23.1 2.48-.59 3.33-1.54Z" fill="#080A08"/>
+            </svg>
+            <div class="app-store-text">
+              <span class="app-store-text-small">Download on the</span>
+              <span class="app-store-text-large">App Store</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="phone-wrapper fade-in">
+        <div class="phone-glow"></div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-status-bar"></div>
+            <div class="phone-header">
+              <div class="phone-header-title">All Hands</div>
+              <div class="phone-header-dot"></div>
+            </div>
+            <div class="phone-tab-bar">
+              <div class="phone-tab active">Lineup</div>
+              <div class="phone-tab">Schedule</div>
+              <div class="phone-tab">Team</div>
+            </div>
+            <div class="phone-body">
+              <div class="phone-match-card">
+                <div class="phone-match-date">
+                  <div class="phone-match-day">28</div>
+                  <div class="phone-match-month">Mar</div>
+                </div>
+                <div class="phone-match-info">
+                  <div class="phone-match-teams">Rovers vs Strikers FC</div>
+                  <div class="phone-match-meta">Saturday, 3:00 PM</div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-header">
+                  <div class="phone-card-title">Player Availability</div>
+                  <div class="phone-card-badge">5/7</div>
+                </div>
+                <div class="phone-card-row">
+                  <div class="phone-avatar lime"></div>
+                  <div class="phone-row-text">
+                    <div class="phone-row-name">Alex M.</div>
+                    <div class="phone-row-sub">Midfielder</div>
+                  </div>
+                  <div class="phone-row-status available">In</div>
+                </div>
+                <div class="phone-card-row">
+                  <div class="phone-avatar lime"></div>
+                  <div class="phone-row-text">
+                    <div class="phone-row-name">Jordan K.</div>
+                    <div class="phone-row-sub">Forward</div>
+                  </div>
+                  <div class="phone-row-status available">In</div>
+                </div>
+                <div class="phone-card-row">
+                  <div class="phone-avatar"></div>
+                  <div class="phone-row-text">
+                    <div class="phone-row-name">Sam R.</div>
+                    <div class="phone-row-sub">Defender</div>
+                  </div>
+                  <div class="phone-row-status unavailable">Out</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom-bar">
+              <div class="phone-bottom-item active"></div>
+              <div class="phone-bottom-item"></div>
+              <div class="phone-bottom-item"></div>
+              <div class="phone-bottom-item"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features ── -->
+  <section id="features">
+    <div class="container">
+      <div class="fade-in">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">Everything your team needs.<br/>Nothing it doesn't.</h2>
+        <p class="section-subtitle">Built for captains and players who want to spend less time in group chats and more time on the pitch.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <h3 class="feature-title">Lineups</h3>
+          <p class="feature-desc">Captains build and publish match lineups with a tap. Players get notified instantly so everyone knows who's starting.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3 class="feature-title">Availability</h3>
+          <p class="feature-desc">Players mark themselves available or unavailable for each match. Captains see the full picture before building lineups.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h3 class="feature-title">Match Schedule</h3>
+          <p class="feature-desc">View your full season schedule with upcoming and past matches, scores, and results all in one place.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="feature-title">Team Management</h3>
+          <p class="feature-desc">Invite players via link, assign roles, and transfer captaincy when the time comes. Your roster, your rules.</p>
+        </div>
+      </div>
+      <!-- Fifth feature: full-width -->
+      <div class="features-grid" style="grid-template-columns: 1fr; margin-top: 20px; max-width: 560px;">
+        <div class="feature-card fade-in" style="text-align: center;">
+          <div class="feature-icon" style="margin-left: auto; margin-right: auto;" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <h3 class="feature-title">Push Notifications</h3>
+          <p class="feature-desc">Never miss a lineup announcement, availability reminder, or match update. Stay in the loop without opening the app.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How it works ── -->
+  <section>
+    <div class="container">
+      <div class="fade-in">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Ready in three steps</h2>
+        <p class="section-subtitle">Get your entire team organized in under two minutes. No complicated setup, no learning curve.</p>
+      </div>
+      <div class="steps">
+        <div class="step fade-in">
+          <div class="step-number">01</div>
+          <h3 class="step-title">Create your team</h3>
+          <p class="step-desc">Name your team and you're off. All Hands works for any sport — football, basketball, hockey, cricket, you name it.</p>
+        </div>
+        <div class="step fade-in">
+          <div class="step-number">02</div>
+          <h3 class="step-title">Invite your players</h3>
+          <p class="step-desc">Share an invite link with your squad. Players join in seconds and can start marking their availability right away.</p>
+        </div>
+        <div class="step fade-in">
+          <div class="step-number">03</div>
+          <h3 class="step-title">Manage matches</h3>
+          <p class="step-desc">Create matches, collect availability, publish lineups, and record results. Everything your team needs, game after game.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Coming Soon ── -->
+  <section class="coming-soon-section">
+    <div class="container">
+      <div class="fade-in" style="text-align: center;">
+        <div class="section-label">Coming Soon</div>
+        <h2 class="section-title">We're just getting started</h2>
+        <p class="section-subtitle" style="margin-left: auto; margin-right: auto;">Big things are on the way. Here's a look at what's next for All Hands.</p>
+      </div>
+      <div class="coming-grid">
+        <div class="coming-card fade-in">
+          <span class="coming-icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6A7A62" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto"><path d="M5 16V2h14v14l-7 5-7-5Z"/><path d="M12 16v5"/></svg>
+          </span>
+          <h3 class="coming-title">Android App</h3>
+          <p class="coming-desc">All Hands is coming to Android so every player on your roster can stay connected.</p>
+          <span class="coming-badge">Coming Soon</span>
+        </div>
+        <div class="coming-card fade-in">
+          <span class="coming-icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6A7A62" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </span>
+          <h3 class="coming-title">Team Chat</h3>
+          <p class="coming-desc">In-app messaging so your team can coordinate without juggling a separate group chat.</p>
+          <span class="coming-badge">Coming Soon</span>
+        </div>
+        <div class="coming-card fade-in">
+          <span class="coming-icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6A7A62" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          </span>
+          <h3 class="coming-title">Match Stats</h3>
+          <p class="coming-desc">Track goals, assists, ratings, and more. Detailed stats and player performance over time.</p>
+          <span class="coming-badge">Coming Soon</span>
+        </div>
+        <div class="coming-card fade-in">
+          <span class="coming-icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6A7A62" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <h3 class="coming-title">Multiple Teams</h3>
+          <p class="coming-desc">Play on more than one team? Manage all of them from a single account with easy switching.</p>
+          <span class="coming-badge">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Band ── -->
+  <section class="cta-band">
+    <div class="container fade-in">
+      <h2 class="cta-band-title">Your team is waiting</h2>
+      <p class="cta-band-sub">Download All Hands and get your squad organized today.</p>
+      <a href="https://apps.apple.com/app/all-hands-sports/id6744866002" class="app-store-btn" aria-label="Download on the App Store">
+        <svg width="24" height="28" viewBox="0 0 24 28" fill="none" aria-hidden="true">
+          <path d="M19.68 14.58c-.03-2.88 2.35-4.26 2.46-4.33a5.34 5.34 0 0 0-4.21-2.27c-1.76-.19-3.5 1.06-4.4 1.06-.92 0-2.29-1.04-3.78-1.01a5.57 5.57 0 0 0-4.69 2.86c-2.02 3.5-.52 8.64 1.42 11.47.96 1.39 2.11 2.94 3.6 2.88 1.46-.06 2-.93 3.76-.93 1.74 0 2.24.93 3.76.9 1.56-.03 2.54-1.4 3.49-2.79a12.16 12.16 0 0 0 1.58-3.25c-.04-.01-3-.15-3-4.59ZM16.9 5.6a5 5 0 0 0 1.15-3.6 5.07 5.07 0 0 0-3.3 1.7 4.75 4.75 0 0 0-1.18 3.44c1.23.1 2.48-.59 3.33-1.54Z" fill="#080A08"/>
+        </svg>
+        <div class="app-store-text">
+          <span class="app-store-text-small">Download on the</span>
+          <span class="app-store-text-large">App Store</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-left">
+        &copy; 2026 All Hands. All rights reserved.
+      </div>
+      <div class="footer-links">
+        <a href="/privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── Scroll Animations ── -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      );
+      document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+    });
+  </script>
+
 </body>
 </html>
-
