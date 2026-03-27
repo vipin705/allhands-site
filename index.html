@@ -209,7 +209,7 @@
       letter-spacing: -0.3px;
     }
 
-    /* ── Phone Mockup ── */
+    /* ── Hero Phone Frame ── */
     .phone-wrapper {
       display: flex;
       justify-content: center;
@@ -218,28 +218,29 @@
     }
     .phone-glow {
       position: absolute;
-      width: 300px;
-      height: 400px;
-      background: radial-gradient(ellipse, rgba(196, 255, 0, 0.1) 0%, transparent 70%);
+      width: 340px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(196, 255, 0, 0.12) 0%, transparent 70%);
       filter: blur(60px);
       pointer-events: none;
     }
-    .phone {
-      width: 280px;
-      height: 560px;
+    .hero-phone-frame {
+      width: 300px;
       background: #111511;
-      border-radius: 44px;
+      border-radius: 50px;
       border: 3px solid #1E261E;
       position: relative;
       overflow: hidden;
+      padding: 14px;
       box-shadow:
         0 0 0 1px rgba(196, 255, 0, 0.05),
+        0 0 40px rgba(196, 255, 0, 0.08),
         0 40px 80px rgba(0, 0, 0, 0.6),
         0 20px 40px rgba(0, 0, 0, 0.4);
     }
-    .phone-notch {
+    .hero-phone-dynamic-island {
       position: absolute;
-      top: 12px;
+      top: 14px;
       left: 50%;
       transform: translateX(-50%);
       width: 100px;
@@ -248,202 +249,172 @@
       border-radius: 20px;
       z-index: 5;
     }
-    .phone-screen {
+    .hero-phone-frame img {
+      width: 100%;
+      border-radius: 36px;
+      display: block;
+    }
+
+    /* ── Screenshot Carousel Section ── */
+    .carousel-section {
+      padding: 100px 0;
+      overflow: hidden;
+    }
+    .carousel-section .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .carousel-wrapper {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .carousel-track-container {
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .carousel-slide {
+      flex: 0 0 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+      cursor: pointer;
+    }
+    .carousel-slide .carousel-phone {
+      width: 220px;
+      background: #111511;
+      border-radius: 40px;
+      border: 2px solid #1E2A1E;
+      position: relative;
+      overflow: hidden;
+      padding: 10px;
+      transition: box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .carousel-slide .carousel-phone .carousel-dynamic-island {
       position: absolute;
-      inset: 14px;
-      background: #0A0D0A;
-      border-radius: 32px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .phone-status-bar {
-      height: 44px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 4px;
-    }
-    .phone-header {
-      padding: 8px 20px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .phone-header-title {
-      font-size: 17px;
-      font-weight: 800;
-      color: #C4FF00;
-      letter-spacing: -0.3px;
-    }
-    .phone-header-dot {
-      width: 8px;
-      height: 8px;
-      background: #C4FF00;
-      border-radius: 50%;
-    }
-    .phone-tab-bar {
-      display: flex;
-      gap: 4px;
-      padding: 0 16px 12px;
-    }
-    .phone-tab {
-      flex: 1;
-      height: 32px;
-      border-radius: 8px;
-      background: rgba(196, 255, 0, 0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 600;
-      color: #6A7A62;
-    }
-    .phone-tab.active {
-      background: #C4FF00;
-      color: #080A08;
-    }
-    .phone-body {
-      flex: 1;
-      padding: 8px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow: hidden;
-    }
-    .phone-card {
-      background: #151A15;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 72px;
+      height: 22px;
+      background: #080A08;
       border-radius: 14px;
-      padding: 14px;
-      border: 1px solid #1E261E;
+      z-index: 5;
     }
-    .phone-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
+    .carousel-slide .carousel-phone img {
+      width: 100%;
+      border-radius: 30px;
+      display: block;
     }
-    .phone-card-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #F0FBE8;
-      letter-spacing: 0.2px;
+    .carousel-slide.active .carousel-phone {
+      box-shadow: 0 0 30px rgba(196, 255, 0, 0.15), 0 20px 40px rgba(0, 0, 0, 0.4);
+      border-color: rgba(196, 255, 0, 0.25);
+      transform: scale(1.08);
     }
-    .phone-card-badge {
-      font-size: 9px;
-      font-weight: 700;
-      color: #080A08;
-      background: #C4FF00;
-      padding: 2px 8px;
-      border-radius: 6px;
+    .carousel-slide:hover .carousel-phone {
+      box-shadow: 0 0 30px rgba(196, 255, 0, 0.15), 0 20px 40px rgba(0, 0, 0, 0.4);
+      border-color: rgba(196, 255, 0, 0.2);
     }
-    .phone-card-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 0;
-    }
-    .phone-card-row + .phone-card-row {
-      border-top: 1px solid rgba(106, 122, 98, 0.15);
-    }
-    .phone-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #1E261E;
-      flex-shrink: 0;
-    }
-    .phone-avatar.lime { background: rgba(196, 255, 0, 0.15); border: 1.5px solid rgba(196, 255, 0, 0.3); }
-    .phone-row-text {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .phone-row-name {
-      font-size: 11px;
-      font-weight: 600;
-      color: #F0FBE8;
-    }
-    .phone-row-sub {
-      font-size: 9px;
-      color: #6A7A62;
-    }
-    .phone-row-status {
-      font-size: 9px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
-    .phone-row-status.available {
-      background: rgba(196, 255, 0, 0.12);
-      color: #C4FF00;
-    }
-    .phone-row-status.unavailable {
-      background: rgba(255, 80, 80, 0.1);
-      color: #ff6b6b;
-    }
-    .phone-match-card {
-      background: #151A15;
-      border-radius: 14px;
-      padding: 14px;
-      border: 1px solid #1E261E;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .phone-match-date {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: rgba(196, 255, 0, 0.08);
-      border-radius: 10px;
-      padding: 8px 10px;
-      min-width: 44px;
-    }
-    .phone-match-day {
-      font-size: 16px;
-      font-weight: 800;
-      color: #C4FF00;
-      line-height: 1;
-    }
-    .phone-match-month {
-      font-size: 8px;
+    .carousel-label {
+      margin-top: 16px;
+      font-size: 14px;
       font-weight: 600;
       color: #6A7A62;
-      text-transform: uppercase;
-      margin-top: 2px;
+      transition: color 0.3s ease;
     }
-    .phone-match-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+    .carousel-slide.active .carousel-label {
+      color: #C4FF00;
     }
-    .phone-match-teams {
-      font-size: 11px;
-      font-weight: 700;
-      color: #F0FBE8;
-    }
-    .phone-match-meta {
-      font-size: 9px;
-      color: #6A7A62;
-    }
-    .phone-bottom-bar {
+
+    /* Carousel nav arrows */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-70%);
+      width: 48px;
       height: 48px;
+      border-radius: 50%;
+      background: #C4FF00;
+      border: none;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: space-around;
-      padding: 0 20px;
-      border-top: 1px solid #1E261E;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     }
-    .phone-bottom-item {
+    .carousel-btn:hover {
+      background: #d4ff40;
+      transform: translateY(-70%) scale(1.08);
+    }
+    .carousel-btn svg {
       width: 20px;
       height: 20px;
-      border-radius: 5px;
-      background: #1E261E;
+      stroke: #080A08;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
-    .phone-bottom-item.active { background: #C4FF00; }
+    .carousel-btn-prev { left: 0; }
+    .carousel-btn-next { right: 0; }
+
+    /* Dot indicators */
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 32px;
+    }
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #1E2A1E;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      padding: 0;
+    }
+    .carousel-dot.active {
+      background: #C4FF00;
+      transform: scale(1.2);
+    }
+    .carousel-dot:hover {
+      background: rgba(196, 255, 0, 0.4);
+    }
+
+    /* Mobile carousel: horizontal scroll */
+    @media (max-width: 900px) {
+      .carousel-track-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .carousel-track-container::-webkit-scrollbar { display: none; }
+      .carousel-track {
+        justify-content: flex-start;
+        padding: 0 calc(50vw - 130px);
+        transition: none;
+      }
+      .carousel-slide {
+        scroll-snap-align: center;
+        flex: 0 0 220px;
+      }
+      .carousel-btn { display: none; }
+    }
 
     /* ── Section shared ── */
     section {
@@ -661,9 +632,9 @@
       .hero-actions { justify-content: center; }
       .hero-badge { margin-left: auto; margin-right: auto; }
       .phone-wrapper { order: -1; }
-      .phone { width: 240px; height: 480px; border-radius: 38px; }
-      .phone-notch { width: 84px; height: 24px; top: 10px; }
-      .phone-screen { inset: 12px; border-radius: 28px; }
+      .hero-phone-frame { width: 240px; border-radius: 42px; padding: 12px; }
+      .hero-phone-dynamic-island { width: 84px; height: 24px; top: 12px; }
+      .hero-phone-frame img { border-radius: 30px; }
 
       .features-grid { grid-template-columns: 1fr; }
       .steps { grid-template-columns: 1fr; gap: 32px; }
@@ -676,6 +647,7 @@
       .feature-card { padding: 28px 24px; }
       .nav-cta span { display: none; }
       .nav-cta { padding: 10px 14px; }
+      .carousel-section { padding: 72px 0; }
     }
   </style>
 </head>
@@ -724,70 +696,73 @@
 
       <div class="phone-wrapper fade-in">
         <div class="phone-glow"></div>
-        <div class="phone">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="phone-status-bar"></div>
-            <div class="phone-header">
-              <div class="phone-header-title">All Hands</div>
-              <div class="phone-header-dot"></div>
+        <div class="hero-phone-frame">
+          <div class="hero-phone-dynamic-island"></div>
+          <img src="screenshots/home.png" alt="All Hands app dashboard showing team management features" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Screenshot Carousel ── -->
+  <section class="carousel-section">
+    <div class="section-header fade-in">
+      <div class="section-label" style="text-align:center;">App Preview</div>
+      <h2 class="section-title" style="text-align:center;">See it in action</h2>
+    </div>
+    <div class="carousel-wrapper">
+      <button class="carousel-btn carousel-btn-prev" aria-label="Previous screenshot">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="carousel-track-container">
+        <div class="carousel-track" id="carouselTrack">
+          <div class="carousel-slide" data-index="0">
+            <div class="carousel-phone">
+              <div class="carousel-dynamic-island"></div>
+              <img src="screenshots/login.png" alt="Sign In screen" />
             </div>
-            <div class="phone-tab-bar">
-              <div class="phone-tab active">Lineup</div>
-              <div class="phone-tab">Schedule</div>
-              <div class="phone-tab">Team</div>
+            <span class="carousel-label">Sign In</span>
+          </div>
+          <div class="carousel-slide" data-index="1">
+            <div class="carousel-phone">
+              <div class="carousel-dynamic-island"></div>
+              <img src="screenshots/signup.png" alt="Create Account screen" />
             </div>
-            <div class="phone-body">
-              <div class="phone-match-card">
-                <div class="phone-match-date">
-                  <div class="phone-match-day">28</div>
-                  <div class="phone-match-month">Mar</div>
-                </div>
-                <div class="phone-match-info">
-                  <div class="phone-match-teams">Rovers vs Strikers FC</div>
-                  <div class="phone-match-meta">Saturday, 3:00 PM</div>
-                </div>
-              </div>
-              <div class="phone-card">
-                <div class="phone-card-header">
-                  <div class="phone-card-title">Player Availability</div>
-                  <div class="phone-card-badge">5/7</div>
-                </div>
-                <div class="phone-card-row">
-                  <div class="phone-avatar lime"></div>
-                  <div class="phone-row-text">
-                    <div class="phone-row-name">Alex M.</div>
-                    <div class="phone-row-sub">Midfielder</div>
-                  </div>
-                  <div class="phone-row-status available">In</div>
-                </div>
-                <div class="phone-card-row">
-                  <div class="phone-avatar lime"></div>
-                  <div class="phone-row-text">
-                    <div class="phone-row-name">Jordan K.</div>
-                    <div class="phone-row-sub">Forward</div>
-                  </div>
-                  <div class="phone-row-status available">In</div>
-                </div>
-                <div class="phone-card-row">
-                  <div class="phone-avatar"></div>
-                  <div class="phone-row-text">
-                    <div class="phone-row-name">Sam R.</div>
-                    <div class="phone-row-sub">Defender</div>
-                  </div>
-                  <div class="phone-row-status unavailable">Out</div>
-                </div>
-              </div>
+            <span class="carousel-label">Create Account</span>
+          </div>
+          <div class="carousel-slide active" data-index="2">
+            <div class="carousel-phone">
+              <div class="carousel-dynamic-island"></div>
+              <img src="screenshots/home.png" alt="Dashboard screen" />
             </div>
-            <div class="phone-bottom-bar">
-              <div class="phone-bottom-item active"></div>
-              <div class="phone-bottom-item"></div>
-              <div class="phone-bottom-item"></div>
-              <div class="phone-bottom-item"></div>
+            <span class="carousel-label">Dashboard</span>
+          </div>
+          <div class="carousel-slide" data-index="3">
+            <div class="carousel-phone">
+              <div class="carousel-dynamic-island"></div>
+              <img src="screenshots/schedule.png" alt="Match Schedule screen" />
             </div>
+            <span class="carousel-label">Match Schedule</span>
+          </div>
+          <div class="carousel-slide" data-index="4">
+            <div class="carousel-phone">
+              <div class="carousel-dynamic-island"></div>
+              <img src="screenshots/profile.png" alt="Your Profile screen" />
+            </div>
+            <span class="carousel-label">Your Profile</span>
           </div>
         </div>
       </div>
+      <button class="carousel-btn carousel-btn-next" aria-label="Next screenshot">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    <div class="carousel-dots" id="carouselDots">
+      <button class="carousel-dot" data-index="0" aria-label="Go to slide 1"></button>
+      <button class="carousel-dot" data-index="1" aria-label="Go to slide 2"></button>
+      <button class="carousel-dot active" data-index="2" aria-label="Go to slide 3"></button>
+      <button class="carousel-dot" data-index="3" aria-label="Go to slide 4"></button>
+      <button class="carousel-dot" data-index="4" aria-label="Go to slide 5"></button>
     </div>
   </section>
 
@@ -944,9 +919,10 @@
     </div>
   </footer>
 
-  <!-- ── Scroll Animations ── -->
+  <!-- ── Scroll Animations & Carousel ── -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Scroll fade-in observer
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -959,6 +935,107 @@
         { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
       );
       document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+
+      // ── Carousel Logic ──
+      const slides = document.querySelectorAll('.carousel-slide');
+      const dots = document.querySelectorAll('.carousel-dot');
+      const prevBtn = document.querySelector('.carousel-btn-prev');
+      const nextBtn = document.querySelector('.carousel-btn-next');
+      const trackContainer = document.querySelector('.carousel-track-container');
+      const totalSlides = slides.length;
+      let activeIndex = 2;
+      let autoTimer = null;
+      let isPaused = false;
+
+      function setActive(index) {
+        activeIndex = ((index % totalSlides) + totalSlides) % totalSlides;
+        slides.forEach((s, i) => {
+          s.classList.toggle('active', i === activeIndex);
+        });
+        dots.forEach((d, i) => {
+          d.classList.toggle('active', i === activeIndex);
+        });
+
+        // On mobile, scroll the active slide into view
+        if (window.innerWidth <= 900) {
+          const activeSlide = slides[activeIndex];
+          if (activeSlide) {
+            const containerRect = trackContainer.getBoundingClientRect();
+            const slideRect = activeSlide.getBoundingClientRect();
+            const scrollLeft = trackContainer.scrollLeft + (slideRect.left - containerRect.left) - (containerRect.width / 2) + (slideRect.width / 2);
+            trackContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+          }
+        }
+      }
+
+      function goNext() {
+        setActive(activeIndex + 1);
+      }
+
+      function goPrev() {
+        setActive(activeIndex - 1);
+      }
+
+      // Arrow buttons
+      nextBtn.addEventListener('click', () => {
+        goNext();
+        resetAutoAdvance();
+      });
+      prevBtn.addEventListener('click', () => {
+        goPrev();
+        resetAutoAdvance();
+      });
+
+      // Dot clicks
+      dots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+          setActive(parseInt(dot.dataset.index, 10));
+          resetAutoAdvance();
+        });
+      });
+
+      // Slide clicks
+      slides.forEach((slide) => {
+        slide.addEventListener('click', () => {
+          setActive(parseInt(slide.dataset.index, 10));
+          resetAutoAdvance();
+        });
+      });
+
+      // Auto-advance
+      function startAutoAdvance() {
+        stopAutoAdvance();
+        autoTimer = setInterval(() => {
+          if (!isPaused) goNext();
+        }, 3000);
+      }
+
+      function stopAutoAdvance() {
+        if (autoTimer) {
+          clearInterval(autoTimer);
+          autoTimer = null;
+        }
+      }
+
+      function resetAutoAdvance() {
+        startAutoAdvance();
+      }
+
+      // Pause on hover
+      const carouselWrapper = document.querySelector('.carousel-wrapper');
+      carouselWrapper.addEventListener('mouseenter', () => { isPaused = true; });
+      carouselWrapper.addEventListener('mouseleave', () => { isPaused = false; });
+
+      // Keyboard navigation
+      carouselWrapper.setAttribute('tabindex', '0');
+      carouselWrapper.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { goPrev(); resetAutoAdvance(); }
+        if (e.key === 'ArrowRight') { goNext(); resetAutoAdvance(); }
+      });
+
+      // Initialize
+      setActive(activeIndex);
+      startAutoAdvance();
     });
   </script>
 
