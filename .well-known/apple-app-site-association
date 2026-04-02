@@ -4,10 +4,7 @@
     "details": [
       {
         "appID": "CF4HYBJXLU.com.vipinkothakapu.allhands",
-        "paths": [
-          "/reset-password",
-          "/join/*"
-        ]
+        "paths": ["/reset-password", "/join", "/join/*"]
       }
     ]
   }

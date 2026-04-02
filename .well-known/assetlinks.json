@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.vipinkothakapu.allhands",
+      "sha256_cert_fingerprints": [
+        "7A:B5:5B:6F:EF:6B:A6:9A:4B:4E:CE:E7:91:11:7C:B8:61:B5:35:91:48:82:C6:6E:AE:53:E4:AA:66:D9:53:84"
+      ]
+    }
+  }
+]

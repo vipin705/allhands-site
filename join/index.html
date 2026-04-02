@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Team — All Hands</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #080A08;
+      color: #F0FBE8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #111411;
+      border: 1px solid #1E2416;
+      border-radius: 20px;
+      padding: 40px 32px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .logo {
+      font-size: 32px;
+      font-weight: 900;
+      color: #C4FF00;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .tagline {
+      font-size: 14px;
+      color: #6A7A62;
+      margin-bottom: 32px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #F0FBE8;
+      margin-bottom: 12px;
+    }
+    p {
+      font-size: 15px;
+      color: #6A7A62;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #C4FF00;
+      color: #080A08;
+      border: none;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: #C4FF00;
+      border: 2px solid #C4FF00;
+    }
+    .stores {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .stores a {
+      flex: 1;
+    }
+    .stores .btn {
+      margin-bottom: 0;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">All Hands</div>
+    <div class="tagline">Team management for every sport</div>
+
+    <h1>You've been invited!</h1>
+    <p>Open the All Hands app to join your team, or download it below if you haven't yet.</p>
+
+    <button class="btn btn-primary" id="openApp">Open in All Hands</button>
+
+    <div class="stores">
+      <a href="https://apps.apple.com/app/id6745198218" class="btn btn-secondary">App Store</a>
+      <a href="https://play.google.com/store/apps/details?id=com.vipinkothakapu.allhands" class="btn btn-secondary">Google Play</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var teamId = params.get('teamId');
+      var deepLink = teamId
+        ? 'allhands://join?teamId=' + encodeURIComponent(teamId)
+        : 'allhands://';
+
+      document.getElementById('openApp').addEventListener('click', function () {
+        window.location.href = deepLink;
+      });
+
+      // On mobile, attempt to open the app automatically after a short delay
+      // so the page is visible first. If the app isn't installed the browser
+      // will stay on this page (no error visible to the user).
+      var ua = navigator.userAgent || '';
+      var isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
+      if (isMobile && teamId) {
+        setTimeout(function () {
+          window.location.href = deepLink;
+        }, 800);
+      }
+    })();
+  </script>
+</body>
+</html>
