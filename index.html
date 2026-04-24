@@ -375,8 +375,9 @@
   .carousel-wrap{position:relative;max-width:1180px;margin:0 auto;padding:0 24px}
   .carousel-container{overflow:hidden;padding:20px 0}
   .carousel-track{
-    display:flex;gap:24px;justify-content:center;align-items:center;
+    display:flex;gap:24px;justify-content:flex-start;align-items:center;
     transition:transform .6s cubic-bezier(.22,1,.36,1);
+    padding:0 calc(50% - 110px);
   }
   .c-slide{
     flex:0 0 220px;display:flex;flex-direction:column;align-items:center;
@@ -643,7 +644,7 @@
 
         <div class="phone phone-float">
           <div class="phone-island"></div>
-          <img src="screenshots/home.png" alt="All Hands app dashboard" />
+          <img src="screenshots/match.png" alt="All Hands match day view" />
         </div>
       </div>
     </div>
@@ -828,11 +829,14 @@
       </button>
       <div class="carousel-container">
         <div class="carousel-track" id="carouselTrack">
-          <div class="c-slide" data-index="0"><div class="c-phone"><div class="c-island"></div><img src="screenshots/login.png" alt="Sign in"/></div><span class="c-label">Sign in</span></div>
-          <div class="c-slide" data-index="1"><div class="c-phone"><div class="c-island"></div><img src="screenshots/signup.png" alt="Create account"/></div><span class="c-label">Create account</span></div>
-          <div class="c-slide active" data-index="2"><div class="c-phone"><div class="c-island"></div><img src="screenshots/home.png" alt="Dashboard"/></div><span class="c-label">Dashboard</span></div>
-          <div class="c-slide" data-index="3"><div class="c-phone"><div class="c-island"></div><img src="screenshots/schedule.png" alt="Schedule"/></div><span class="c-label">Schedule</span></div>
-          <div class="c-slide" data-index="4"><div class="c-phone"><div class="c-island"></div><img src="screenshots/profile.png" alt="Profile"/></div><span class="c-label">Profile</span></div>
+          <div class="c-slide" data-index="0"><div class="c-phone"><div class="c-island"></div><img src="screenshots/splash.png" alt="All Hands landing"/></div><span class="c-label">Get started</span></div>
+          <div class="c-slide" data-index="1"><div class="c-phone"><div class="c-island"></div><img src="screenshots/signin.png" alt="Sign in"/></div><span class="c-label">Sign in</span></div>
+          <div class="c-slide" data-index="2"><div class="c-phone"><div class="c-island"></div><img src="screenshots/schedule.png" alt="Schedule"/></div><span class="c-label">Schedule</span></div>
+          <div class="c-slide active" data-index="3"><div class="c-phone"><div class="c-island"></div><img src="screenshots/match.png" alt="Match day"/></div><span class="c-label">Match day</span></div>
+          <div class="c-slide" data-index="4"><div class="c-phone"><div class="c-island"></div><img src="screenshots/lineup.png" alt="Squad lineup"/></div><span class="c-label">Pick the lineup</span></div>
+          <div class="c-slide" data-index="5"><div class="c-phone"><div class="c-island"></div><img src="screenshots/match-detail.png" alt="Match detail"/></div><span class="c-label">Match detail</span></div>
+          <div class="c-slide" data-index="6"><div class="c-phone"><div class="c-island"></div><img src="screenshots/team.png" alt="Team roster"/></div><span class="c-label">Team roster</span></div>
+          <div class="c-slide" data-index="7"><div class="c-phone"><div class="c-island"></div><img src="screenshots/player.png" alt="Player stats"/></div><span class="c-label">Player stats</span></div>
         </div>
       </div>
       <button class="c-btn c-next" aria-label="Next screenshot">
@@ -842,9 +846,12 @@
     <div class="c-dots" id="carouselDots">
       <button class="c-dot" data-index="0" aria-label="Go to slide 1"></button>
       <button class="c-dot" data-index="1" aria-label="Go to slide 2"></button>
-      <button class="c-dot active" data-index="2" aria-label="Go to slide 3"></button>
-      <button class="c-dot" data-index="3" aria-label="Go to slide 4"></button>
+      <button class="c-dot" data-index="2" aria-label="Go to slide 3"></button>
+      <button class="c-dot active" data-index="3" aria-label="Go to slide 4"></button>
       <button class="c-dot" data-index="4" aria-label="Go to slide 5"></button>
+      <button class="c-dot" data-index="5" aria-label="Go to slide 6"></button>
+      <button class="c-dot" data-index="6" aria-label="Go to slide 7"></button>
+      <button class="c-dot" data-index="7" aria-label="Go to slide 8"></button>
     </div>
   </section>
 
@@ -940,13 +947,16 @@
     const nextBtn=document.querySelector('.c-next');
     const trackC=document.querySelector('.carousel-container');
     const total=slides.length;
-    let idx=2,timer=null,paused=false;
+    let idx=3,timer=null,paused=false;
 
     function setActive(i){
       idx=((i%total)+total)%total;
       slides.forEach((s,j)=>s.classList.toggle('active',j===idx));
       dots.forEach((d,j)=>d.classList.toggle('active',j===idx));
-      if(window.innerWidth<=900){
+      if(window.innerWidth>900){
+        const stride=220+24;
+        document.getElementById('carouselTrack').style.transform=`translateX(${-idx*stride}px)`;
+      } else {
         const a=slides[idx];
         if(a){
           const cr=trackC.getBoundingClientRect();
