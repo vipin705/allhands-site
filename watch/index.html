@@ -324,7 +324,9 @@
   const POLL_INTERVAL_MS = 30_000;
 
   // ── State ───────────────────────────────────────────────────────────────────
-  const shareToken = window.location.pathname.split('/watch/')[1]?.split('/')[0];
+  // Read token from path (/watch/<token>) or query param (?t=<token>) for GitHub Pages fallback
+  const shareToken = window.location.pathname.split('/watch/')[1]?.split('/')[0]
+    || new URLSearchParams(window.location.search).get('t');
   let agoraClient = null;
   let remoteTrack = null;
   let pollTimer = null;
