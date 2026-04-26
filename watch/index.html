@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Live Stream — All Hands</title>
+<meta name="description" content="Watch a live match stream on All Hands." />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<style>
+  :root {
+    --bg: #080A08;
+    --fg: #F0FBE8;
+    --muted: #6A7A62;
+    --accent: #C4FF00;
+    --red: #E53935;
+    --border: #1E2416;
+    --card: rgba(255,255,255,0.04);
+    --radius: 14px;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ── Layout ────────────────────────────────────────────────────── */
+  #app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #video-container {
+    position: absolute;
+    inset: 0;
+    background: #000;
+  }
+
+  /* Agora remote video track fills the container */
+  #video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ── Top bar ───────────────────────────────────────────────────── */
+  #top-bar {
+    position: absolute;
+    top: env(safe-area-inset-top, 16px);
+    left: 0; right: 0;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--red);
+    border-radius: 8px;
+    padding: 4px 8px;
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .live-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  /* ── Bottom bar ────────────────────────────────────────────────── */
+  #bottom-bar {
+    position: absolute;
+    bottom: env(safe-area-inset-bottom, 0);
+    left: 0; right: 0;
+    padding: 16px 16px 24px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  #stream-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  #stream-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg);
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #controls {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .ctrl-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.5);
+    color: var(--fg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .ctrl-btn:hover { background: rgba(255,255,255,0.12); }
+  .ctrl-btn:active { background: rgba(255,255,255,0.2); }
+
+  .ctrl-btn svg { display: block; }
+
+  /* ── Overlay states ────────────────────────────────────────────── */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 32px;
+    background: var(--bg);
+  }
+
+  .overlay.hidden { display: none; }
+
+  /* Loading spinner */
+  .spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid rgba(196,255,0,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .overlay-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fg);
+    text-align: center;
+  }
+
+  .overlay-sub {
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+    max-width: 280px;
+  }
+
+  .app-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--fg);
+    margin-top: 8px;
+    transition: background 0.15s;
+  }
+
+  .app-badge:hover { background: rgba(255,255,255,0.06); }
+
+  .app-badge-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .app-badge-text { display: flex; flex-direction: column; gap: 1px; }
+  .app-badge-label { font-size: 11px; color: var(--muted); }
+  .app-badge-name { font-size: 14px; font-weight: 600; }
+
+  /* Branding watermark */
+  .watermark {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .watermark a { color: var(--muted); text-decoration: none; }
+  .watermark a:hover { color: var(--fg); }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Video -->
+  <div id="video-container"></div>
+
+  <!-- Top bar (live badge) — shown only during live state -->
+  <div id="top-bar" class="hidden">
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      <span class="live-label">LIVE</span>
+    </div>
+  </div>
+
+  <!-- Bottom bar — shown only during live state -->
+  <div id="bottom-bar" class="hidden">
+    <div id="stream-info">
+      <span id="stream-title">All Hands Live</span>
+    </div>
+    <div id="controls">
+      <button class="ctrl-btn" id="mute-btn" title="Mute / Unmute" aria-label="Mute">
+        <!-- Unmuted icon -->
+        <svg id="icon-unmuted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+        <!-- Muted icon (hidden by default) -->
+        <svg id="icon-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <line x1="23" y1="9" x2="17" y2="15"/>
+          <line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+      </button>
+      <button class="ctrl-btn" id="fullscreen-btn" title="Fullscreen" aria-label="Fullscreen">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 3 21 3 21 9"/>
+          <polyline points="9 21 3 21 3 15"/>
+          <line x1="21" y1="3" x2="14" y2="10"/>
+          <line x1="3" y1="21" x2="10" y2="14"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay" class="overlay">
+    <div class="spinner"></div>
+    <span class="overlay-title">Joining stream…</span>
+    <span class="watermark"><a href="https://playallhands.com">All Hands</a></span>
+  </div>
+
+  <!-- Ended overlay -->
+  <div id="ended-overlay" class="overlay hidden">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6A7A62" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="10" y1="15" x2="10" y2="9"/>
+      <line x1="14" y1="15" x2="14" y2="9"/>
+    </svg>
+    <span class="overlay-title">Stream has ended</span>
+    <span class="overlay-sub">The live stream has finished. Download All Hands to catch the next match.</span>
+    <a class="app-badge" href="https://apps.apple.com/app/all-hands-sports/id6745218990">
+      <div class="app-badge-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#080A08">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+        </svg>
+      </div>
+      <div class="app-badge-text">
+        <span class="app-badge-label">Download on the</span>
+        <span class="app-badge-name">App Store</span>
+      </div>
+    </a>
+    <span class="watermark"><a href="https://playallhands.com">playallhands.com</a></span>
+  </div>
+
+</div>
+
+<!-- Agora Web SDK -->
+<script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.23.2.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ── Config ──────────────────────────────────────────────────────────────────
+  const SUPABASE_FUNCTIONS_URL = 'https://kijgibkdcfbjaygkhbye.supabase.co/functions/v1';
+  const POLL_INTERVAL_MS = 30_000;
+
+  // ── State ───────────────────────────────────────────────────────────────────
+  const shareToken = window.location.pathname.split('/watch/')[1]?.split('/')[0];
+  let agoraClient = null;
+  let remoteTrack = null;
+  let pollTimer = null;
+  let muted = false;
+
+  // ── DOM refs ───────────────────────────────────────────────────────────────
+  const loadingOverlay = document.getElementById('loading-overlay');
+  const endedOverlay   = document.getElementById('ended-overlay');
+  const topBar         = document.getElementById('top-bar');
+  const bottomBar      = document.getElementById('bottom-bar');
+  const videoContainer = document.getElementById('video-container');
+  const muteBtn        = document.getElementById('mute-btn');
+  const fullscreenBtn  = document.getElementById('fullscreen-btn');
+  const iconUnmuted    = document.getElementById('icon-unmuted');
+  const iconMuted      = document.getElementById('icon-muted');
+  const streamTitle    = document.getElementById('stream-title');
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+  function showEnded() {
+    stopPolling();
+    if (agoraClient) {
+      agoraClient.leave().catch(() => {});
+      agoraClient = null;
+    }
+    loadingOverlay.classList.add('hidden');
+    topBar.classList.add('hidden');
+    bottomBar.classList.add('hidden');
+    endedOverlay.classList.remove('hidden');
+  }
+
+  function showLive() {
+    loadingOverlay.classList.add('hidden');
+    endedOverlay.classList.add('hidden');
+    topBar.classList.remove('hidden');
+    bottomBar.classList.remove('hidden');
+  }
+
+  function stopPolling() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  async function fetchToken() {
+    const res = await fetch(`${SUPABASE_FUNCTIONS_URL}/agora-token-external`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shareToken }),
+    });
+    return res;
+  }
+
+  // ── Guard: no token in URL ──────────────────────────────────────────────────
+  if (!shareToken) { showEnded(); return; }
+
+  // ── Main init ────────────────────────────────────────────────────────────────
+  async function init() {
+    let res;
+    try {
+      res = await fetchToken();
+    } catch {
+      showEnded();
+      return;
+    }
+
+    if (res.status === 410 || res.status === 404) { showEnded(); return; }
+    if (!res.ok) { showEnded(); return; }
+
+    const { token, appId, channelName } = await res.json();
+
+    // Join Agora as audience
+    agoraClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
+    agoraClient.setClientRole('audience');
+
+    agoraClient.on('user-published', async (user, mediaType) => {
+      await agoraClient.subscribe(user, mediaType);
+      if (mediaType === 'video') {
+        remoteTrack = user.videoTrack;
+        remoteTrack.play(videoContainer);
+        showLive();
+      }
+      if (mediaType === 'audio') {
+        user.audioTrack.play();
+      }
+    });
+
+    agoraClient.on('user-unpublished', (user, mediaType) => {
+      if (mediaType === 'video') showEnded();
+    });
+
+    try {
+      await agoraClient.join(appId, channelName, token, null);
+    } catch {
+      showEnded();
+      return;
+    }
+
+    // Show live UI immediately (video may take a moment to appear)
+    showLive();
+
+    // Poll every 30s to detect stream end
+    pollTimer = setInterval(async () => {
+      try {
+        const r = await fetchToken();
+        if (r.status === 410 || r.status === 404) showEnded();
+      } catch {
+        // network blip — keep watching, next poll will catch it
+      }
+    }, POLL_INTERVAL_MS);
+  }
+
+  // ── Controls ─────────────────────────────────────────────────────────────────
+  muteBtn.addEventListener('click', () => {
+    if (!agoraClient) return;
+    muted = !muted;
+    // Mute/unmute all subscribed audio tracks
+    agoraClient.remoteUsers.forEach(u => {
+      if (u.audioTrack) {
+        muted ? u.audioTrack.setVolume(0) : u.audioTrack.setVolume(100);
+      }
+    });
+    iconUnmuted.style.display = muted ? 'none' : 'block';
+    iconMuted.style.display   = muted ? 'block' : 'none';
+  });
+
+  fullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  });
+
+  // ── Leave on unload ─────────────────────────────────────────────────────────
+  window.addEventListener('beforeunload', () => {
+    navigator.sendBeacon(
+      `${SUPABASE_FUNCTIONS_URL}/leave-external-viewer`,
+      JSON.stringify({ shareToken })
+    );
+  });
+
+  // ── Start ───────────────────────────────────────────────────────────────────
+  init();
+})();
+</script>
+</body>
+</html>
