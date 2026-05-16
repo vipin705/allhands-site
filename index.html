@@ -246,8 +246,12 @@
   .proof-divider{width:1px;height:36px;background:var(--line)}
   @media (max-width:720px){
     .proof-divider{display:none}
-    .proof .container{justify-content:center;gap:22px}
-    .proof-num{font-size:22px}
+    .proof .container{
+      display:grid;grid-template-columns:1fr 1fr;
+      gap:24px 0;
+    }
+    .proof-item{justify-content:center;text-align:center}
+    .proof-num{font-size:24px}
   }
 
   /* ─── sections ─── */
